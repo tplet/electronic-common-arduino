@@ -4,8 +4,8 @@ cmake_minimum_required(VERSION 3.3)
 set(NAME common-arduino)
 
 # Files
-file(GLOB_RECURSE FILES_CPP "com/*.cpp")
-file(GLOB_RECURSE FILES_H "com/*.h")
+file(GLOB_RECURSE FILES_CPP "src/*.cpp")
+file(GLOB_RECURSE FILES_H "src/*.h")
 
 # Ignores some paths
 include(CMakeLists-ignore.txt)
@@ -18,6 +18,9 @@ add_library(${NAME} ${FILES_CPP} ${FILES_H})
 target_include_directories(${NAME} PUBLIC .)
 
 ## Dependencies
+# Common
+add_subdirectory(./vendors/common/)
+target_link_libraries(${NAME} common)
 # EEPROM
 add_subdirectory(./vendors/eeprom/)
 target_link_libraries(${NAME} eeprom)
