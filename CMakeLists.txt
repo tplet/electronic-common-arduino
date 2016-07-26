@@ -19,8 +19,8 @@ target_include_directories(${NAME} PUBLIC .)
 
 ## Dependencies
 # EEPROM
-#add_subdirectory(./vendors/eeprom/)
-#target_link_libraries(${NAME} eeprom)
+add_subdirectory(./vendors/eeprom/)
+target_link_libraries(${NAME} eeprom)
 # LiquidCrystal
-#add_subdirectory(./vendors/LiquidCrystal/)
-#target_link_libraries(${NAME} LiquidCrystal)
+add_subdirectory(./vendors/LiquidCrystal/)
+target_link_libraries(${NAME} LiquidCrystal)
