@@ -1,0 +1,9 @@
+[submodule "vendors/common"]
+	path = vendors/common
+	url = http://gitlab.osteres.com/electronic/common.git
+[submodule "vendors/eeprom"]
+	path = vendors/eeprom
+	url = git@github.com:osteres/EEPROM.git
+[submodule "vendors/LiquidCrystal"]
+	path = vendors/LiquidCrystal
+	url = git@github.com:osteres/LiquidCrystal.git
