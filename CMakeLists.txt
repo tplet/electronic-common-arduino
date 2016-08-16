@@ -27,3 +27,6 @@ target_link_libraries(${NAME} eeprom)
 # LiquidCrystal
 add_subdirectory(./vendors/LiquidCrystal/)
 target_link_libraries(${NAME} LiquidCrystal)
+# RTC
+add_subdirectory(./vendors/RTClib)
+target_link_libraries(${NAME} RTC)
