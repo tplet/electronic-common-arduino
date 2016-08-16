@@ -2,3 +2,17 @@
 # Sample
 #remove_path(FILES_CPP /sample/)
 #remove_path(FILES_H /sample/)
+
+# Do not includes vendors for standard platform
+if (NOT ARDUINO_FOUND)
+    remove_path(FILES_CPP /vendors/)
+    remove_path(FILES_H /vendors/)
+
+# Remove some part of dependencies
+else()
+
+    # Nothing?
+
+
+
+endif()
