@@ -23,14 +23,9 @@ namespace com
                     class ArduinoRequester : public Requester {
                     public:
                         /**
-                     * Constructor
-                     */
-                        ArduinoRequester(RF24 * radio, unsigned long long writingChannel) : Requester(radio, writingChannel) {};
-
-                        /**
-                         * Destructor
+                         * Constructor
                          */
-                        ~ArduinoRequester() : ~Requester();
+                        ArduinoRequester(RF24 * radio, unsigned long long writingChannel) : Requester(radio, writingChannel) {};
 
                         /**
                          * Set RTC object

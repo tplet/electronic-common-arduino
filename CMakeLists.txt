@@ -13,11 +13,9 @@ include(CMakeLists-ignore.txt)
 # ARDUINO MODE
 if (ARDUINO_FOUND)
     ## Dependencies
-    # RTC (append to sources)
+    # RTC (library)
     include_directories(./vendors/RTClib)
     add_subdirectory(./vendors/RTClib)
-    list(APPEND FILES_CPP ${RTClib_FILES_CPP})
-    list(APPEND FILES_H ${RTClib_FILES_H})
     # Common (library)
     include_directories(./vendors/common)
     add_subdirectory(./vendors/common/)
@@ -28,9 +26,13 @@ if (ARDUINO_FOUND)
         SRCS ${FILES_CPP}
         HDRS ${FILES_H}
         BOARD ${BOARD}
-        ARDLIBS EEProm LiquidCrystal
-        LIBS common
+        ARDLIBS Wire SPI EEPROM LiquidCrystal
+        LIBS common RTClib
+#        NO_AUTOLIBS
     )
+
+    # StandardCplusplus (add root path of this library to include path)
+    target_include_directories(${NAME} PUBLIC ./vendors/common/vendors/StandardCplusplus)
 
 # OTHER MODE (Raspberry)
 else()
@@ -53,6 +55,10 @@ else()
     target_link_libraries(${NAME} RTC)
 
 endif()
+
+# Compiler
+set_property(TARGET ${NAME} PROPERTY CXX_STANDARD 11)
+set_property(TARGET ${NAME} PROPERTY CXX_STANDARD_REQUIRED ON)
 
 # Permit to include files (similar as defining ./ directory to include path)
 target_include_directories(${NAME} PUBLIC .)
