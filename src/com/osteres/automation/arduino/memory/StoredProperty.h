@@ -37,31 +37,20 @@ namespace com
                         /**
                          * Constructor
                          */
-                        StoredProperty() : Property()
+                        StoredProperty() : Property<T>()
                         {
                             this->construct();
                         }
 
                         /**
                          * Constructor
+                         * Be careful, when init value specified, can erase current stored value
                          *
                          * @param int address Address to stored data in EEProm. Be sure that this address not already used!
                          */
-                        StoredProperty(T initValue) : Property(initValue)
+                        StoredProperty(T initValue) : Property<T>(initValue)
                         {
                             this->construct();
-                        };
-
-                        /**
-                         * Constructor
-                         *
-                         * @param T initValue Init value to affect if no value to memory
-                         * @param int address Address to stored data in EEProm. Be sure that this address not already used!
-                         */
-                        StoredProperty(T initValue, int address) : Property(initValue)
-                        {
-                            this->construct();
-                            this->setAddress(address);
                         };
 
                         /**
@@ -82,7 +71,7 @@ namespace com
 
                         /**
                          * Set address
-                         * Be sure for this operation. Data will be lost!
+                         * Be sure for this operation and that this address not already used! Data will be lost!
                          */
                         void setAddress(int address)
                         {
@@ -98,7 +87,7 @@ namespace com
                          */
                         T set(T value) {
                             // Parent
-                            Property::set(value);
+                            Property<T>::set(value);
 
                             if (this->isChanged()) {
                                 EEPROM.put(this->getAddress(), this->value);
@@ -113,12 +102,12 @@ namespace com
                          */
                         T get() {
                             // Parent
-                            T v = Property::get();
+                            T v = Property<T>::get();
 
                             if (this->isForceReading()) {
                                 EEPROM.get(this->getAddress(), this->value);
                                 this->forceReading = false;
-                                v = Property::get();
+                                v = Property<T>::get();
                             }
 
                             return v;

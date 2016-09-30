@@ -9,13 +9,13 @@
 #include <com/osteres/automation/transmission/Transmitter.h>
 #include <com/osteres/automation/transmission/packet/Packet.h>
 #include <com/osteres/automation/transmission/packet/Command.h>
-#include <com/osteres/automation/arduino/memory/Value.h>
+#include <com/osteres/automation/arduino/memory/StoredProperty.h>
 
 using com::osteres::automation::action::Action;
 using com::osteres::automation::transmission::Transmitter;
 using com::osteres::automation::transmission::packet::Packet;
 using com::osteres::automation::transmission::packet::Command;
-using com::osteres::automation::arduino::memory::Value;
+using com::osteres::automation::arduino::memory::StoredProperty;
 
 namespace com
 {
@@ -33,9 +33,13 @@ namespace com
                         /**
                          * Constructor
                          */
-                        IdentifierSetter(Value<unsigned char> * identifier, Transmitter * transmitter)
-                        {
-                            this->identifier = identifier;
+                        IdentifierSetter(
+                            StoredProperty<unsigned char> * propertyType,
+                            StoredProperty<unsigned char> * propertyIdentifier,
+                            Transmitter * transmitter
+                        ) {
+                            this->propertyType = propertyType;
+                            this->propertyIdentifier = propertyIdentifier;
                             this->transmitter = transmitter;
                         }
 
@@ -47,7 +51,7 @@ namespace com
                             // parent
                             Action::execute();
 
-                            Packet * packet = new Packet(this->identifier->get());
+                            Packet * packet = new Packet(this->propertyType->get());
 
                             // Prepare data
                             packet->setCommand(Command::IDENTIFIER_REQUEST);
@@ -71,14 +75,20 @@ namespace com
                          */
                         void response(Packet * packet)
                         {
-                            this->identifier->set(packet->getDataUChar1());
+                            this->propertyIdentifier->set(packet->getDataUChar1());
                         }
 
                     protected:
                         /**
-                         * EEPROM location for identifier value
+                         * Sensor type identifier property
                          */
-                        Value<unsigned char> * identifier = NULL;
+                        StoredProperty<unsigned char> * propertyType = NULL;
+
+                        /**
+                         * Sensor identifier property
+                         */
+                        StoredProperty<unsigned char> * propertyIdentifier = NULL;
+
                         /**
                          * Transmitter to send packet
                          */
