@@ -60,7 +60,7 @@ namespace com
                     /**
                      * Get sensor identifier property
                      */
-                    StoredProperty * getPropertyIdentifier()
+                    StoredProperty<unsigned char> * getPropertyIdentifier()
                     {
                         return this->propertyIdentifier;
                     }
@@ -68,7 +68,7 @@ namespace com
                     /**
                      * Get sensor type identifier property
                      */
-                    Property * getPropertyType()
+                    Property<unsigned char> * getPropertyType()
                     {
                         return this->propertyType;
                     }
