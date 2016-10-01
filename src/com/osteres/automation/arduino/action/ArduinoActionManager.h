@@ -12,12 +12,14 @@
 #include <com/osteres/automation/transmission/packet/Packet.h>
 #include <com/osteres/automation/action/ActionManagerBase.h>
 #include <com/osteres/automation/arduino/action/SensorIdentifierAction.h>
+#include <com/osteres/automation/arduino/action/DateTimeAction.h>
 
 using com::osteres::automation::transmission::packet::Command;
 using com::osteres::automation::transmission::packet::CommandString;
 using com::osteres::automation::transmission::packet::Packet;
 using com::osteres::automation::action::ActionManagerBase;
 using com::osteres::automation::arduino::action::SensorIdentifierAction;
+using com::osteres::automation::arduino::action::DateTimeAction;
 using std::string;
 
 namespace com
@@ -50,6 +52,12 @@ namespace com
                                     this->getActionSensorIdentifier()->response(packet);
                                 }
                             }
+                            // Command: DATETIME_RESPONSE
+                            else if (Command::DATETIME_RESPONSE == packet->getCommand()) {
+                                if (this->hasActionDateTime()) {
+                                    this->getActionDateTime()->response(packet);
+                                }
+                            }
                         }
 
                         /**
@@ -57,7 +65,7 @@ namespace com
                          */
                         void setActionSensorIdentifier(SensorIdentifierAction * action)
                         {
-                            this->sensorIdentifierAction = action;
+                            this->actionSensorIdentifier = action;
                         }
 
                         /**
@@ -65,7 +73,7 @@ namespace com
                          */
                         bool hasActionSensorIdentifier()
                         {
-                            return this->sensorIdentifierAction != NULL;
+                            return this->actionSensorIdentifier != NULL;
                         }
 
                         /**
@@ -73,7 +81,31 @@ namespace com
                          */
                         SensorIdentifierAction * getActionSensorIdentifier()
                         {
-                            return this->sensorIdentifierAction;
+                            return this->actionSensorIdentifier;
+                        }
+
+                        /**
+                         * Set date time action
+                         */
+                        void setActionDateTime(DateTimeAction * action)
+                        {
+                            this->actionDateTime = action;
+                        }
+
+                        /**
+                         * Flag to indicate if date time action is defined
+                         */
+                        bool hasActionDateTime()
+                        {
+                            return this->actionDateTime != NULL;
+                        }
+
+                        /**
+                         * Get date time action
+                         */
+                        DateTimeAction * getActionDateTime()
+                        {
+                            return this->actionDateTime;
                         }
 
                     protected:
@@ -81,7 +113,17 @@ namespace com
                         /**
                          * Sensor identifier action
                          */
-                        SensorIdentifierAction * sensorIdentifierAction = NULL;
+                        SensorIdentifierAction * actionSensorIdentifier = NULL;
+
+                        /**
+                         * Date time action
+                         */
+                        DateTimeAction * actionDateTime = NULL;
+
+                        /**
+                         * RTC for DateTime
+                         */
+                        RTC_DS1307 * rtc = NULL;
                     };
                 }
             }
