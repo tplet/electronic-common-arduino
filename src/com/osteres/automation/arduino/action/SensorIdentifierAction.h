@@ -9,12 +9,14 @@
 #include <com/osteres/automation/transmission/Transmitter.h>
 #include <com/osteres/automation/transmission/packet/Packet.h>
 #include <com/osteres/automation/transmission/packet/Command.h>
+#include <com/osteres/automation/memory/Property.h>
 #include <com/osteres/automation/arduino/memory/StoredProperty.h>
 
 using com::osteres::automation::action::Action;
 using com::osteres::automation::transmission::Transmitter;
 using com::osteres::automation::transmission::packet::Packet;
 using com::osteres::automation::transmission::packet::Command;
+using com::osteres::automation::memory::Property;
 using com::osteres::automation::arduino::memory::StoredProperty;
 
 namespace com
@@ -27,26 +29,28 @@ namespace com
             {
                 namespace action
                 {
-                    class IdentifierSetter : public Action
+                    class SensorIdentifierAction : public Action
                     {
                     public:
                         /**
                          * Constructor
                          */
-                        IdentifierSetter(
-                            StoredProperty<unsigned char> * propertyType,
+                        SensorIdentifierAction(
+                            Property<unsigned char> * propertyType,
                             StoredProperty<unsigned char> * propertyIdentifier,
+                            unsigned char target,
                             Transmitter * transmitter
                         ) {
                             this->propertyType = propertyType;
                             this->propertyIdentifier = propertyIdentifier;
                             this->transmitter = transmitter;
+                            this->target = target;
                         }
 
                         /**
                          * Request to obtain new identifier
                          */
-                        void request(unsigned char type, unsigned char to)
+                        void request()
                         {
                             // parent
                             Action::execute();
@@ -55,18 +59,14 @@ namespace com
 
                             // Prepare data
                             packet->setCommand(Command::IDENTIFIER_REQUEST);
-                            packet->setTarget(to);
+                            packet->setTarget(this->target);
                             packet->setLast(true);
-                            packet->setDataUChar1(type); // Sensor type
 
                             // Transmit packet
                             this->transmitter->send(packet);
 
                             // Free memory
                             delete packet;
-
-                            this->setSuccess();
-                            return this->isSuccess();
                         }
 
                         /**
@@ -75,14 +75,16 @@ namespace com
                          */
                         void response(Packet * packet)
                         {
-                            this->propertyIdentifier->set(packet->getDataUChar1());
+                            this->propertyIdentifier->set(static_cast<unsigned char>(packet->getDataUChar1()));
+                            this->setSuccess();
+                            this->executed = true;
                         }
 
                     protected:
                         /**
                          * Sensor type identifier property
                          */
-                        StoredProperty<unsigned char> * propertyType = NULL;
+                        Property<unsigned char> * propertyType = NULL;
 
                         /**
                          * Sensor identifier property
@@ -93,6 +95,11 @@ namespace com
                          * Transmitter to send packet
                          */
                         Transmitter * transmitter = NULL;
+
+                        /**
+                         * Target to obtain identifier
+                         */
+                        unsigned char target;
 
                     };
                 }
