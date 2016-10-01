@@ -73,6 +73,12 @@ namespace com
                             this->actionManager = NULL;
                         }
 
+                        // Remove sensor identifier action
+                        if (this->actionSensorIdentifier != NULL) {
+                            delete this->actionSensorIdentifier;
+                            this->actionSensorIdentifier = NULL;
+                        }
+
                     }
 
                     /**
