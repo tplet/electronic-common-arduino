@@ -134,6 +134,11 @@ namespace com
                             // Forward to transmitter
                             static_cast<ArduinoRequester *>(this->transmitter->getRequester())->setRTC(this->getRTC());
                         }
+
+                        // Add support for identifier response command to action manager
+                        if (this->hasActionManager()) {
+                            this->getActionManager()->setActionSensorIdentifier(this->getActionSensorIdentifier());
+                        }
                     }
 
                     /**
@@ -142,11 +147,6 @@ namespace com
                     void requestForAnIdentifier()
                     {
                         SensorIdentifierAction * action = this->getActionSensorIdentifier();
-
-                        // Add support for identifier response command to action manager
-                        if (this->hasActionManager()) {
-                            this->getActionManager()->setActionSensorIdentifier(action);
-                        }
 
                         // Request
                         action->request();
