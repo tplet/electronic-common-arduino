@@ -63,7 +63,7 @@ namespace com
                             packet->setLast(true);
 
                             // Transmit packet
-                            this->transmitter->send(packet);
+                            this->transmitter->sendAndConfirm(packet);
 
                             // Free memory
                             delete packet;
