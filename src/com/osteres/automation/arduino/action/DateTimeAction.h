@@ -46,6 +46,8 @@ namespace com
                             this->rtc = rtc;
                             this->transmitter = transmitter;
                             this->target = target;
+                            this->propertyType = propertyType;
+                            this->propertyIdentifier = propertyIdentifier;
                         }
 
                         /**
@@ -62,6 +64,7 @@ namespace com
                             packet->setCommand(Command::DATETIME_REQUEST);
                             packet->setTarget(this->target);
                             packet->setSourceIdentifier(this->propertyIdentifier->get());
+                            packet->setSourceType(this->propertyType->get());
                             packet->setLast(true);
 
                             // Transmit packet
