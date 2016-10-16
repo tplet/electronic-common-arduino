@@ -1,6 +1,6 @@
 [submodule "vendors/common"]
 	path = vendors/common
-	url = http://gitlab.osteres.com/electronic/common.git
+	url = git@github.com:osteres/electronic-common-arduino.git
 [submodule "vendors/eeprom"]
 	path = vendors/eeprom
 	url = git@github.com:osteres/EEPROM.git
