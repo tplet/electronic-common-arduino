@@ -60,13 +60,9 @@ namespace com
                             // Prepare data
                             packet->setCommand(Command::IDENTIFIER_REQUEST);
                             packet->setTarget(this->target);
-                            packet->setLast(true);
 
                             // Transmit packet
-                            this->transmitter->sendAndConfirm(packet);
-
-                            // Free memory
-                            delete packet;
+                            this->transmitter->add(packet, true);
                         }
 
                         /**
