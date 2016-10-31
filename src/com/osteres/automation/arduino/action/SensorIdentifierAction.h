@@ -58,8 +58,8 @@ namespace com
                             //Search if an IDENTIFIER_REQUEST already exist
                             bool found = false;
                             Packing * packing = NULL;
-                            for (unsigned int i = 0; i < this->transmitter->getQueue()->size(); i++) {
-                                packing = this->transmitter->getQueue()->at(i);
+                            for (unsigned int i = 0; i < this->transmitter->getQueueSended()->size(); i++) {
+                                packing = this->transmitter->getQueueSended()->at(i);
                                 if (packing->getPacket()->getCommand() == Command::IDENTIFIER_REQUEST) {
                                     found = true;
                                     break;
