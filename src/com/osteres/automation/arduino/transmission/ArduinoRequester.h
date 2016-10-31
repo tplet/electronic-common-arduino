@@ -39,7 +39,7 @@ namespace com
 
                     protected:
                         /**
-                         * Prepare packet and send it only (no response attempted)
+                         * Prepare packet and send it
                          */
                         void doSend(Packet *packet)
                         {

@@ -6,6 +6,7 @@
 #define LIBCOMMON_POLYFILL_H
 
 #include <Arduino.h>
+#include <StandardCplusplus.h>
 #include <cstdint>
 
 typedef uint8_t byte;
