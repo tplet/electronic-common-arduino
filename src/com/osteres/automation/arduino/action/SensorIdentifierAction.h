@@ -55,18 +55,29 @@ namespace com
                             // parent
                             Action::execute();
 
-                            Packet * packet = new Packet(this->propertyType->get());
+                            //Search if an IDENTIFIER_REQUEST already exist
+                            bool found = false;
+                            Packing * packing = NULL;
+                            for (unsigned int i = 0; i < this->transmitter->getQueueSended()->size(); i++) {
+                                packing = this->transmitter->getQueueSended()->at(i);
+                                if (packing->getPacket()->getCommand() == Command::IDENTIFIER_REQUEST) {
+                                    found = true;
+                                    break;
+                                }
+                            }
+                            packing = NULL;
 
-                            // Prepare data
-                            packet->setCommand(Command::IDENTIFIER_REQUEST);
-                            packet->setTarget(this->target);
-                            packet->setLast(true);
+                            // If not already exists
+                            if (!found) {
+                                Packet *packet = new Packet(this->propertyType->get());
 
-                            // Transmit packet
-                            this->transmitter->sendAndConfirm(packet);
+                                // Prepare data
+                                packet->setCommand(Command::IDENTIFIER_REQUEST);
+                                packet->setTarget(this->target);
 
-                            // Free memory
-                            delete packet;
+                                // Transmit packet
+                                this->transmitter->add(packet, true);
+                            }
                         }
 
                         /**

@@ -65,13 +65,9 @@ namespace com
                             packet->setTarget(this->target);
                             packet->setSourceIdentifier(this->propertyIdentifier->get());
                             packet->setSourceType(this->propertyType->get());
-                            packet->setLast(true);
 
                             // Transmit packet
-                            this->transmitter->sendAndConfirm(packet);
-
-                            // Free memory
-                            delete packet;
+                            this->transmitter->add(packet);
                         }
 
                         /**
