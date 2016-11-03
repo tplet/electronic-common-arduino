@@ -1,12 +1,12 @@
 [submodule "vendors/common"]
 	path = vendors/common
-	url = git@github.com:osteres/electronic-common.git
+	url = git@github.com:tplet/electronic-common.git
 [submodule "vendors/eeprom"]
 	path = vendors/eeprom
-	url = git@github.com:osteres/EEPROM.git
+	url = git@github.com:tplet/EEPROM.git
 [submodule "vendors/LiquidCrystal"]
 	path = vendors/LiquidCrystal
-	url = git@github.com:osteres/LiquidCrystal.git
+	url = git@github.com:tplet/LiquidCrystal.git
 [submodule "vendors/RTClib"]
 	path = vendors/RTClib
-	url = git@github.com:osteres/RTClib.git
+	url = git@github.com:tplet/RTClib.git
