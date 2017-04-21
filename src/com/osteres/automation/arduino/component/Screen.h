@@ -10,6 +10,9 @@
 #define LCD_HEIGHT 2
 
 #include <LiquidCrystal.h>
+#include <com/osteres/automation/memory/Property.h>
+
+using com::osteres::automation::memory::Property;
 
 namespace com
 {
@@ -56,8 +59,11 @@ namespace com
                          */
                         ~Screen()
                         {
-
-
+                            // Enabled property
+                            if (this->enabled != NULL) {
+                                delete this->enabled;
+                                this->enabled = NULL;
+                            }
                         }
 
                         /**
@@ -84,6 +90,26 @@ namespace com
                         }
 
                         /**
+                         * Enable switch detection to enable/disable screen
+                         *
+                         * Need to call detectSwitch() method in sensor loop
+                         */
+                        void enableSwitchDetection(unsigned int pin, bool digital)
+                        {
+                            this->switchPin = pin;
+                            this->switchPinDigital = digital;
+                            this->switchEnabled = true;
+                        }
+
+                        /**
+                         * Disable switch detection to enable/disable screen
+                         */
+                        void disableSwitch()
+                        {
+                            this->switchEnabled = false;
+                        }
+
+                        /**
                          * Set cursor position on screen
                          */
                         void setCursor(uint8_t col, uint8_t row)
@@ -100,11 +126,39 @@ namespace com
                         }
 
                         /**
+                         * Switch detection
+                         *
+                         * Change enabled property when pin value change and enable/disable screen
+                         */
+                        void detectSwitch()
+                        {
+                            if (this->isSwitchEnabled()) {
+                                // Read value
+                                bool value;
+                                if (this->switchPinDigital) {
+                                    value = digitalRead(this->switchPin) == 1;
+                                } else {
+                                    value = analogRead(this->switchPin) >= 512;
+                                }
+                                this->enabled->set(value);
+
+                                // If value changed, enable/disable screen
+                                if (this->enabled->isChanged()) {
+                                    if (value) {
+                                        this->enable();
+                                    } else {
+                                        this->disable();
+                                    }
+                                }
+                            }
+                        }
+
+                        /**
                          * Flag to indicate if screen is enable and used
                          */
                         bool isEnabled()
                         {
-                            return this->enabled;
+                            return this->enabled->get();
                         }
 
                         /**
@@ -112,7 +166,7 @@ namespace com
                          */
                         void setEnabled(bool flag)
                         {
-                            this->enabled = flag;
+                            this->enabled->set(flag);
                         }
 
                         /**
@@ -171,6 +225,14 @@ namespace com
                             return this->height;
                         }
 
+                        /**
+                         * Flag to indicate if switch detection is used to set screen state (enable or disable)
+                         */
+                        bool isSwitchEnabled()
+                        {
+                            return this->switchEnabled;
+                        }
+
                     protected:
                         /**
                          * Global construct part
@@ -181,20 +243,19 @@ namespace com
                             unsigned int height
                         )
                         {
-                            this->setDevice(device);
+                            // Prepare enabled property
+                            this->enabled = new Property<bool>(false);
+
                             this->setWidth(width);
                             this->setHeight(height);
+                            this->setDevice(device);
+
                         }
 
                         /**
                          * Screen
                          */
                         LiquidCrystal *device = NULL;
-
-                        /**
-                         * Flag to indicate if screen is enabled and used
-                         */
-                        bool enabled = false;
 
                         /**
                          * Screen width (in number of chars)
@@ -205,6 +266,26 @@ namespace com
                          * Screen height (in number of chars)
                          */
                         unsigned int height = LCD_HEIGHT;
+
+                        /**
+                         * Flag to indicate if switch detection is used to set screen state (enable or disable)
+                         */
+                        bool switchEnabled = false;
+
+                        /**
+                         * Switch pin to read
+                         */
+                        unsigned int switchPin = 0;
+
+                        /**
+                         * Flag to indicate if pin for switch is analog or digital pin
+                         */
+                        bool switchPinDigital = true;
+
+                        /**
+                         * Property to store enabled value
+                         */
+                        Property<bool> * enabled = NULL;
                     };
                 };
             };
