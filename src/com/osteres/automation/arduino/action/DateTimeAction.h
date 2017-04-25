@@ -71,7 +71,7 @@ namespace com
                         }
 
                         /**
-                         * Identifier received
+                         * Datetime received
                          * Save it
                          */
                         void response(Packet * packet)

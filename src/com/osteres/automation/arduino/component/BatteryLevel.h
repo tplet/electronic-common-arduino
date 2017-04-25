@@ -61,10 +61,6 @@ namespace com
                             float pinVoltage = float(pinValue) * this->vcc / 1024.0;
                             float batteryVoltage = this->getCalculatedBatteryVoltage(pinVoltage);
 
-                            Serial.println(pinValue);
-                            Serial.println(pinVoltage);
-                            Serial.println(batteryVoltage);
-
                             return batteryVoltage;
                         }
 
