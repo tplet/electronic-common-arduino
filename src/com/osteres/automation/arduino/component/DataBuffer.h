@@ -14,12 +14,15 @@ namespace com {
                     public:
                         /**
                          * Constructor
+                         *
+                         * @param delay      Delay for buffer validity, in milliseconds
+                         * @param firstDelay Delay for first outdate, in milliseconds. Immediate by default.
                          */
-                        DataBuffer()
+                        DataBuffer(unsigned int delay = 10000, unsigned int firstDelay = 0)
                         {
                             // Init
-                            this->bufferDelay = 10 * 1000; // ms
-                            this->bufferTimePoint = millis();
+                            this->bufferDelay = delay; // ms
+                            this->bufferTimePoint = millis() - delay + firstDelay;
                         }
 
                         /**
