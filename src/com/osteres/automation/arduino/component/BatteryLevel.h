@@ -61,6 +61,15 @@ namespace com
                             float pinVoltage = float(pinValue) * this->vcc / 1024.0;
                             float batteryVoltage = this->getCalculatedBatteryVoltage(pinVoltage);
 
+                            /*
+                            Serial.print("Pin value: ");
+                            Serial.println(pinValue);
+                            Serial.print("Pin voltage: ");
+                            Serial.println(pinVoltage);
+                            Serial.print("Battery voltage: ");
+                            Serial.println(batteryVoltage);
+                            */
+
                             return batteryVoltage;
                         }
 
@@ -203,12 +212,12 @@ namespace com
                         /**
                          * Resistance value between pin and ground
                          */
-                        float resistanceGnd = 222e3;
+                        float resistanceGnd = 10e3;
 
                         /**
                          * Resistance value between vcc and pin
                          */
-                        float resistanceVcc = 1015e3;
+                        float resistanceVcc = 3.3e3;
 
                         /**
                          * Battery voltage max
