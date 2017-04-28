@@ -14,7 +14,9 @@
 #include <com/osteres/automation/arduino/action/DateTimeAction.h>
 #include <com/osteres/automation/sensor/Identity.h>
 #include <com/osteres/automation/arduino/action/ArduinoActionManager.h>
+#include <com/osteres/automation/arduino/action/TransmitBatteryLevelAction.h>
 #include <com/osteres/automation/arduino/transmission/ArduinoRequester.h>
+#include <com/osteres/automation/arduino/component/BatteryLevel.h>
 
 using com::osteres::automation::Application;
 using com::osteres::automation::memory::Property;
@@ -24,7 +26,9 @@ using com::osteres::automation::arduino::action::SensorIdentifierAction;
 using com::osteres::automation::arduino::action::DateTimeAction;
 using com::osteres::automation::sensor::Identity;
 using com::osteres::automation::arduino::action::ArduinoActionManager;
+using com::osteres::automation::arduino::action::TransmitBatteryLevelAction;
 using com::osteres::automation::arduino::transmission::ArduinoRequester;
+using com::osteres::automation::arduino::component::BatteryLevel;
 
 namespace com
 {
@@ -98,6 +102,12 @@ namespace com
                             this->actionDateTime = NULL;
                         }
 
+                        // Remove transmit battery level action
+                        if (this->actionTransmitBatteryLevel != NULL) {
+                            delete this->actionTransmitBatteryLevel;
+                            this->actionTransmitBatteryLevel = NULL;
+                        }
+
                     }
 
                     /**
@@ -165,6 +175,20 @@ namespace com
                             if (this->hasActionManager()) {
                                 this->getActionManager()->setActionDateTime(action);
                             }
+
+                            // Request
+                            action->request();
+                        }
+                    }
+
+                    /**
+                     * Request to send battery level to server
+                     */
+                    void requestForBatteryLevel()
+                    {
+                        // Only if battery level is defined
+                        if (this->hasBatteryLevel()) {
+                            TransmitBatteryLevelAction * action = this->getActionTransmitBatteryLevel();
 
                             // Request
                             action->request();
@@ -267,6 +291,26 @@ namespace com
                     }
 
                     /**
+                     * Get transmit battery level action
+                     *
+                     * Generate instance if not exist yet and if battery level is available
+                     */
+                    TransmitBatteryLevelAction * getActionTransmitBatteryLevel()
+                    {
+                        if (this->actionTransmitBatteryLevel == NULL && this->hasBatteryLevel()) {
+                            this->actionTransmitBatteryLevel = new TransmitBatteryLevelAction(
+                                this->getPropertyType(),
+                                this->getPropertyIdentifier(),
+                                this->getBatteryLevel(),
+                                Identity::MASTER,
+                                this->getTransmitter()
+                            );
+                        }
+
+                        return this->actionTransmitBatteryLevel;
+                    }
+
+                    /**
                      * Get RTC
                      */
                     RTC_DS1307 * getRTC()
@@ -289,6 +333,32 @@ namespace com
                     {
                         return this->rtc != NULL;
                     }
+
+                    /**
+                     * Flag to indicate if battery level component exists
+                     */
+                    bool hasBatteryLevel()
+                    {
+                        return this->batteryLevel != NULL;
+                    }
+
+                    /**
+                     * Set battery level component
+                     */
+                    void setBatteryLevel(BatteryLevel * batteryLevel)
+                    {
+                        this->batteryLevel = batteryLevel;
+                    }
+
+                    /**
+                     * Get battery level component
+                     */
+                    BatteryLevel * getBatteryLevel()
+                    {
+                        return this->batteryLevel;
+                    }
+
+
 
                 protected:
                     /**
@@ -322,9 +392,19 @@ namespace com
                     DateTimeAction * actionDateTime = NULL;
 
                     /**
+                     * Transmit battery level action
+                     */
+                    TransmitBatteryLevelAction * actionTransmitBatteryLevel = NULL;
+
+                    /**
                      * RTC object for DateTime
                      */
                     RTC_DS1307 * rtc = NULL;
+
+                    /**
+                     * Battery level component
+                     */
+                    BatteryLevel * batteryLevel = NULL;
 
                 };
             }
