@@ -50,6 +50,14 @@ namespace com {
                         }
 
                         /**
+                         * Set buffer as outdated imediately
+                         */
+                        void setOutdated()
+                        {
+                            this->bufferTimePoint = millis() - this->getBufferDelay();
+                        }
+
+                        /**
                          * Get limit delay at which buffer is considering as outdated (in milliseconds)
                          */
                         unsigned long getBufferDelay()
