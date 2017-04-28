@@ -56,9 +56,7 @@ namespace com
                              * pinVoltage = pin_value * vcc / 1024
                              */
 
-                            unsigned int pinValue = this->value->read();
-
-                            float pinVoltage = float(pinValue) * this->vcc / 1024.0;
+                            float pinVoltage = this->getPinVoltage();
                             float batteryVoltage = this->getCalculatedBatteryVoltage(pinVoltage);
 
                             /*
@@ -71,6 +69,19 @@ namespace com
                             */
 
                             return batteryVoltage;
+                        }
+
+                        /**
+                         * Get pin voltage
+                         */
+                        float getPinVoltage()
+                        {
+                            /*
+                             * pinVoltage = pin_value * vcc / 1024
+                             */
+                            unsigned int pinValue = this->value->read();
+
+                            return float(pinValue) * this->vcc / 1024.0;
                         }
 
                         /**
