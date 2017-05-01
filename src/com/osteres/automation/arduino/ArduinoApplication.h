@@ -70,7 +70,7 @@ namespace com
                     /**
                      * Destructor
                      */
-                    ~ArduinoApplication()
+                    virtual ~ArduinoApplication()
                     {
                         // Remove sensor identifier property
                         if (this->propertyIdentifier != NULL) {
