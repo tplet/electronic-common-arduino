@@ -8,6 +8,7 @@
 #include <RTClib/RTClib.h>
 #include <com/osteres/automation/Application.h>
 #include <com/osteres/automation/memory/Property.h>
+#include <com/osteres/automation/arduino/memory/StoredPropertyManager.h>
 #include <com/osteres/automation/arduino/memory/StoredProperty.h>
 #include <com/osteres/automation/transmission/Transmitter.h>
 #include <com/osteres/automation/arduino/action/SensorIdentifierAction.h>
@@ -21,6 +22,7 @@
 using com::osteres::automation::Application;
 using com::osteres::automation::memory::Property;
 using com::osteres::automation::arduino::memory::StoredProperty;
+using com::osteres::automation::arduino::memory::StoredPropertyManager;
 using com::osteres::automation::transmission::Transmitter;
 using com::osteres::automation::arduino::action::SensorIdentifierAction;
 using com::osteres::automation::arduino::action::DateTimeAction;
@@ -115,9 +117,9 @@ namespace com
                      */
                     void construct(unsigned char type, Transmitter * transmitter)
                     {
-                        // Sensor identifier
+                        // Sensor identifier then add to container
                         this->propertyIdentifier = new StoredProperty<unsigned char>();
-                        this->propertyIdentifier->setAddress(0x00);
+                        StoredPropertyManager::configure(this->propertyIdentifier);
 
                         // Sensor type
                         this->propertyType = new Property<unsigned char>(type);
