@@ -111,15 +111,27 @@ namespace com
 
                         /**
                          * Read current pin value
+                         *
+                         * @param int nb Number of time to read value (max 63 : 65535 / 1024)
                          */
-                        T read()
+                        T read(unsigned int nb = 1)
                         {
                             T v;
 
                             if (this->isDigital()) {
                                 v = digitalRead(this->getPin());
                             } else {
-                                v = analogRead(this->getPin());
+                                T average = 0;
+                                if (nb > 63) {
+                                    nb = 63;
+                                }
+                                for (int i = 0; i < nb; i++) {
+                                    average += analogRead(this->getPin());
+                                    if (i + 1 < nb) {
+                                        delay(3); // let ADC settle before next sample: 3ms
+                                    }
+                                }
+                                v = (int)round((double)average / (double)nb);
                             }
 
                             // Save value
